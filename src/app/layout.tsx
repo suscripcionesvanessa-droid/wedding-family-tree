@@ -9,6 +9,12 @@ export const metadata: Metadata = {
   title: 'Familia de la boda',
   description: 'Conoce la familia',
   manifest: '/manifest.json',
+  themeColor: '#e11d48',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'La Familia',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

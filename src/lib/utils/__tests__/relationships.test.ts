@@ -78,4 +78,13 @@ describe('getRelatedPeople', () => {
     expect(result).toHaveLength(1)
     expect(result[0].direction).toBe('b_to_a')
   })
+
+  it('silently skips relationships where the other person is not in the people array', () => {
+    const relationships = [{
+      id: 'r1', person_a_id: '1', person_b_id: 'unknown-id',
+      type: 'sibling_of' as const, created_at: ''
+    }]
+    const result = getRelatedPeople('1', relationships, [mockPerson])
+    expect(result).toHaveLength(0)
+  })
 })

@@ -29,16 +29,20 @@ export async function getPersonById(id: string): Promise<Person | null> {
     .select('*')
     .eq('id', id)
     .single()
-  if (error) return null
+  if (error) {
+    if (error.code === 'PGRST116') return null
+    throw error
+  }
   return data
 }
 
 export async function searchPeople(query: string): Promise<Person[]> {
   const supabase = createClient()
+  // Use separate filters instead of raw .or() string to avoid PostgREST filter injection
   const { data, error } = await supabase
     .from('people')
     .select('*')
-    .or(`name.ilike.%${query}%,nickname.ilike.%${query}%`)
+    .or(`name.ilike.%${query.replace(/[%_,()]/g, '')}%,nickname.ilike.%${query.replace(/[%_,()]/g, '')}%`)
     .order('name')
   if (error) throw error
   return data

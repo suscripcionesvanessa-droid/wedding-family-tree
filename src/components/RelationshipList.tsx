@@ -14,8 +14,8 @@ export function RelationshipList({ relationships }: Props) {
         Relaciones
       </h3>
       <ul className="space-y-1">
-        {relationships.map((rel, i) => (
-          <li key={i} className="text-sm text-gray-700">
+        {relationships.map((rel) => (
+          <li key={`${rel.other.id}-${rel.type}`} className="text-sm text-gray-700">
             {formatRelationshipText(rel)}
           </li>
         ))}

@@ -14,13 +14,19 @@ export default async function PersonPage({ params }: Props) {
   const { id } = await params
   const supabase = await createClient()
 
-  const [{ data: person }, { data: allPeople }, { data: allRelationships }] = await Promise.all([
+  const [
+    { data: person },
+    { data: allPeople, error: peopleError },
+    { data: allRelationships, error: relError },
+  ] = await Promise.all([
     supabase.from('people').select('*').eq('id', id).single(),
     supabase.from('people').select('*'),
     supabase.from('relationships').select('*'),
   ])
 
   if (!person) notFound()
+  if (peopleError) throw peopleError
+  if (relError) throw relError
 
   const relationships = getRelatedPeople(id, allRelationships ?? [], allPeople ?? [])
   const familyLabel = person.family_side === 'bride' ? 'Familia de la novia' : 'Familia del novio'

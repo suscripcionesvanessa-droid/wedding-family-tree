@@ -18,9 +18,13 @@ describe('PersonCard', () => {
     expect(screen.getByText('"Anita"')).toBeInTheDocument()
   })
 
-  it('renders placeholder when no photo', () => {
+  it('does not render nickname when null', () => {
+    render(<PersonCard person={{ ...person, nickname: null }} />)
+    expect(screen.queryByText(/"/)).toBeNull()
+  })
+
+  it('renders placeholder icon when no photo', () => {
     render(<PersonCard person={person} />)
-    // User icon rendered when no photo_url
-    expect(screen.queryByRole('img')).toBeNull()
+    expect(screen.getByTestId('photo-placeholder')).toBeInTheDocument()
   })
 })

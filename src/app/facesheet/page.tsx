@@ -12,9 +12,13 @@ export default function FacesheetPage() {
   const [people, setPeople] = useState<Person[]>([])
   const [filter, setFilter] = useState<FamilySide | 'all'>('all')
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
-    getAllPeople().then(setPeople).finally(() => setLoading(false))
+    getAllPeople()
+      .then(setPeople)
+      .catch(() => setError(true))
+      .finally(() => setLoading(false))
   }, [])
 
   const filtered = filter === 'all' ? people : people.filter(p => p.family_side === filter)
@@ -43,7 +47,10 @@ export default function FacesheetPage() {
           ))}
         </div>
       )}
-      {!loading && filtered.length === 0 && (
+      {!loading && error && (
+        <p className="text-center text-red-500 mt-12">Error al cargar la familia. Intenta de nuevo.</p>
+      )}
+      {!loading && !error && filtered.length === 0 && (
         <p className="text-center text-gray-500 mt-12">No hay personas aún.</p>
       )}
     </main>

@@ -20,7 +20,7 @@ export function PersonCard({ person }: Props) {
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center" data-testid="photo-placeholder">
               <User size={48} className="text-gray-300" />
             </div>
           )}

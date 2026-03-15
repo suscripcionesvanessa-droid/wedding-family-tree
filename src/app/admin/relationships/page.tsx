@@ -4,9 +4,9 @@ import { getAllPeople } from '@/lib/api/people'
 import { getAllRelationships, deleteRelationship } from '@/lib/api/relationships'
 import { RelationshipForm } from '@/components/admin/RelationshipForm'
 import { Trash2 } from 'lucide-react'
-import type { Person, Relationship } from '@/types'
+import type { Person, Relationship, RelationshipType } from '@/types'
 
-const TYPE_LABELS: Record<string, string> = {
+const TYPE_LABELS: Record<RelationshipType, string> = {
   parent_of: 'padre/madre de',
   sibling_of: 'hermano/a de',
   married_to: 'casado/a con',
@@ -28,8 +28,12 @@ export default function AdminRelationshipsPage() {
 
   async function handleDelete(id: string) {
     if (!confirm('¿Eliminar esta relación?')) return
-    await deleteRelationship(id)
-    load()
+    try {
+      await deleteRelationship(id)
+      load()
+    } catch {
+      alert('Error al eliminar. Intenta de nuevo.')
+    }
   }
 
   return (

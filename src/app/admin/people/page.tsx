@@ -15,8 +15,12 @@ export default function AdminPeoplePage() {
 
   async function handleDelete(id: string) {
     if (!confirm('¿Eliminar esta persona?')) return
-    await deletePerson(id)
-    load()
+    try {
+      await deletePerson(id)
+      load()
+    } catch {
+      alert('Error al eliminar. Intenta de nuevo.')
+    }
   }
 
   return (

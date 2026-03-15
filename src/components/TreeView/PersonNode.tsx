@@ -3,9 +3,10 @@ import { Handle, Position } from '@xyflow/react'
 import Image from 'next/image'
 import { User } from 'lucide-react'
 import type { NodeProps } from '@xyflow/react'
+import type { Person } from '@/types'
 
 export const PersonNode = memo(function PersonNode({ data }: NodeProps) {
-  const person = data as { id: string; name: string; nickname: string | null; photo_url: string | null; onClick?: () => void }
+  const person = data as Person & { onClick?: () => void }
 
   return (
     <div

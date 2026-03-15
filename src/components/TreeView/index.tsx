@@ -16,8 +16,9 @@ interface Props {
   relationships: Relationship[]
 }
 
-function buildLayout(people: Person[]): Node[] {
+function buildLayout(people: Person[], _relationships: Relationship[]): Node[] {
   // Simple grid layout — users can drag nodes to rearrange
+  // _relationships reserved for future hierarchy-aware layout
   return people.map((p, i) => ({
     id: p.id,
     type: 'person',
@@ -38,7 +39,7 @@ function buildEdges(relationships: Relationship[]): Edge[] {
 
 export function TreeView({ people, relationships }: Props) {
   const router = useRouter()
-  const baseNodes = useMemo(() => buildLayout(people), [people])
+  const baseNodes = useMemo(() => buildLayout(people, relationships), [people, relationships])
   const edges = useMemo(() => buildEdges(relationships), [relationships])
 
   const nodes = useMemo(

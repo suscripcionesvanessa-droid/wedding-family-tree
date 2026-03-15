@@ -51,11 +51,11 @@ export default async function PersonPage({ params }: Props) {
           <span className="inline-block mt-2 px-3 py-1 bg-rose-50 text-rose-700 text-xs rounded-full">
             {familyLabel}
           </span>
+          <UpdatePhotoButton personId={person.id} />
           {person.bio && (
             <p className="mt-4 text-gray-600 text-sm">{person.bio}</p>
           )}
           <RelationshipList relationships={relationships} />
-          <UpdatePhotoButton personId={person.id} />
         </div>
       </div>
     </main>

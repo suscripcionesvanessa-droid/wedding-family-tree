@@ -1,22 +1,54 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { getAllPeople } from '@/lib/api/people'
+import { getAllRelationships } from '@/lib/api/relationships'
 import { PersonCard } from '@/components/PersonCard'
 import { FamilyFilter } from '@/components/FamilyFilter'
 import { WEDDING_CONFIG } from '@/config/wedding'
-import type { Person, FamilySide } from '@/types'
+import type { Person, FamilySide, Relationship } from '@/types'
 
 const { brideName: BRIDE_NAME, groomName: GROOM_NAME } = WEDDING_CONFIG
 
+function getRelationshipSummary(personId: string, relationships: Relationship[], allPeople: Person[]): string {
+  const peopleById = Object.fromEntries(allPeople.map(p => [p.id, p]))
+  const parts: string[] = []
+
+  for (const rel of relationships) {
+    if (rel.person_a_id === personId || rel.person_b_id === personId) {
+      const otherId = rel.person_a_id === personId ? rel.person_b_id : rel.person_a_id
+      const other = peopleById[otherId]
+      if (!other) continue
+      const otherName = other.nickname ?? other.name.split(' ')[0]
+
+      if (rel.type === 'married_to' || rel.type === 'partner_of') {
+        parts.push(`pareja de ${otherName}`)
+      } else if (rel.type === 'parent_of' && rel.person_a_id === personId) {
+        parts.push(`padre/madre de ${otherName}`)
+      } else if (rel.type === 'parent_of' && rel.person_b_id === personId) {
+        parts.push(`hijo/a de ${otherName}`)
+      } else if (rel.type === 'sibling_of') {
+        parts.push(`hermano/a de ${otherName}`)
+      }
+    }
+  }
+
+  // Show max 2 relationships to keep it short
+  return parts.slice(0, 2).join(' · ')
+}
+
 export default function FacesheetPage() {
   const [people, setPeople] = useState<Person[]>([])
+  const [relationships, setRelationships] = useState<Relationship[]>([])
   const [filter, setFilter] = useState<FamilySide | 'all'>('all')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    getAllPeople()
-      .then(setPeople)
+    Promise.all([getAllPeople(), getAllRelationships()])
+      .then(([peopleData, relationshipsData]) => {
+        setPeople(peopleData)
+        setRelationships(relationshipsData)
+      })
       .catch(() => setError(true))
       .finally(() => setLoading(false))
   }, [])
@@ -43,7 +75,11 @@ export default function FacesheetPage() {
       ) : (
         <div className="grid grid-cols-3 gap-3">
           {filtered.map(person => (
-            <PersonCard key={person.id} person={person} />
+            <PersonCard
+              key={person.id}
+              person={person}
+              relationshipSummary={getRelationshipSummary(person.id, relationships, people)}
+            />
           ))}
         </div>
       )}

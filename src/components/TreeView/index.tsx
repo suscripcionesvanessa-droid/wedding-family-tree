@@ -7,7 +7,7 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { PersonNode } from './PersonNode'
-import type { Person, Relationship } from '@/types'
+import type { Person, Relationship, RelationshipType } from '@/types'
 
 const nodeTypes = { person: PersonNode }
 
@@ -28,12 +28,26 @@ function buildLayout(people: Person[], _relationships: Relationship[]): Node[] {
 }
 
 function buildEdges(relationships: Relationship[]): Edge[] {
+  const LABELS: Record<RelationshipType, string> = {
+    married_to: 'casado/a con',
+    partner_of: 'pareja de',
+    parent_of: 'padre/madre de',
+    sibling_of: 'hermano/a de',
+  }
+  const COLORS: Record<RelationshipType, string> = {
+    married_to: '#e11d48',
+    partner_of: '#f43f5e',
+    parent_of: '#6366f1',
+    sibling_of: '#9ca3af',
+  }
   return relationships.map(rel => ({
     id: rel.id,
     source: rel.person_a_id,
     target: rel.person_b_id,
-    label: rel.type === 'married_to' ? '💍' : rel.type === 'parent_of' ? '' : '~',
-    style: { stroke: rel.type === 'married_to' ? '#e11d48' : '#9ca3af' },
+    label: LABELS[rel.type],
+    labelStyle: { fontSize: 10, fill: COLORS[rel.type], fontWeight: 500 },
+    labelBgStyle: { fill: '#ffffff', fillOpacity: 0.85 },
+    style: { stroke: COLORS[rel.type], strokeWidth: 2 },
   }))
 }
 

@@ -5,9 +5,10 @@ import type { Person } from '@/types'
 
 interface Props {
   person: Person
+  relationshipSummary?: string
 }
 
-export function PersonCard({ person }: Props) {
+export function PersonCard({ person, relationshipSummary }: Props) {
   return (
     <Link href={`/person/${person.id}`}>
       <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
@@ -29,6 +30,9 @@ export function PersonCard({ person }: Props) {
           <p className="font-semibold text-sm text-gray-900 truncate">{person.name}</p>
           {person.nickname && (
             <p className="text-xs text-gray-500">"{person.nickname}"</p>
+          )}
+          {relationshipSummary && (
+            <p className="text-xs text-gray-400 mt-0.5 truncate">{relationshipSummary}</p>
           )}
         </div>
       </div>

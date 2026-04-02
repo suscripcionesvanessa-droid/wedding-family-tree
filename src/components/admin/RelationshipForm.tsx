@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { createRelationship } from '@/lib/api/relationships'
-import type { Person, RelationshipType } from '@/types'
+import { createRelationship, updateRelationship } from '@/lib/api/relationships'
+import type { Person, Relationship, RelationshipType } from '@/types'
 
 const RELATIONSHIP_LABELS: Record<RelationshipType, string> = {
   parent_of: 'es padre/madre de',
@@ -12,13 +12,14 @@ const RELATIONSHIP_LABELS: Record<RelationshipType, string> = {
 
 interface Props {
   people: Person[]
+  relationship?: Relationship
   onSuccess: () => void
 }
 
-export function RelationshipForm({ people, onSuccess }: Props) {
-  const [personA, setPersonA] = useState('')
-  const [type, setType] = useState<RelationshipType>('sibling_of')
-  const [personB, setPersonB] = useState('')
+export function RelationshipForm({ people, relationship, onSuccess }: Props) {
+  const [personA, setPersonA] = useState(relationship?.person_a_id ?? '')
+  const [type, setType] = useState<RelationshipType>(relationship?.type ?? 'sibling_of')
+  const [personB, setPersonB] = useState(relationship?.person_b_id ?? '')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -28,8 +29,12 @@ export function RelationshipForm({ people, onSuccess }: Props) {
     setSaving(true)
     setError('')
     try {
-      await createRelationship(personA, personB, type)
-      setPersonA(''); setPersonB('')
+      if (relationship) {
+        await updateRelationship(relationship.id, personA, personB, type)
+      } else {
+        await createRelationship(personA, personB, type)
+        setPersonA(''); setPersonB('')
+      }
       onSuccess()
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error al guardar')
@@ -57,7 +62,7 @@ export function RelationshipForm({ people, onSuccess }: Props) {
       </select>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <button type="submit" disabled={saving} className="w-full bg-rose-600 text-white py-2 rounded-lg text-sm font-medium disabled:opacity-50">
-        {saving ? 'Guardando...' : 'Agregar relación'}
+        {saving ? 'Guardando...' : relationship ? 'Guardar cambios' : 'Agregar relación'}
       </button>
     </form>
   )

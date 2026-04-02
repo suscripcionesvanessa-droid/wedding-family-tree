@@ -33,12 +33,16 @@ function buildEdges(relationships: Relationship[]): Edge[] {
     partner_of: 'pareja de',
     parent_of: 'padre/madre de',
     sibling_of: 'hermano/a de',
+    uncle_aunt_of: 'tío/a de',
+    cousin_of: 'primo/a de',
   }
   const COLORS: Record<RelationshipType, string> = {
     married_to: '#e11d48',
     partner_of: '#f43f5e',
     parent_of: '#6366f1',
     sibling_of: '#9ca3af',
+    uncle_aunt_of: '#f59e0b',
+    cousin_of: '#10b981',
   }
   return relationships.map(rel => ({
     id: rel.id,

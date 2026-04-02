@@ -13,6 +13,12 @@ export function formatRelationshipText(rel: ResolvedRelationship): string {
       return `Casada/Casado con ${name}`
     case 'partner_of':
       return `Pareja de ${name}`
+    case 'uncle_aunt_of':
+      return rel.direction === 'a_to_b'
+        ? `Tío/Tía de ${name}`
+        : `Sobrino/Sobrina de ${name}`
+    case 'cousin_of':
+      return `Primo/Prima de ${name}`
   }
 }
 

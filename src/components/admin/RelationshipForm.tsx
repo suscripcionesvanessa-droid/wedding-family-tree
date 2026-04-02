@@ -8,6 +8,8 @@ const RELATIONSHIP_LABELS: Record<RelationshipType, string> = {
   sibling_of: 'es hermano/a de',
   married_to: 'está casado/a con',
   partner_of: 'es pareja de',
+  uncle_aunt_of: 'es tío/a de',
+  cousin_of: 'es primo/a de',
 }
 
 interface Props {

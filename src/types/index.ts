@@ -1,6 +1,6 @@
 export type FamilySide = 'bride' | 'groom'
 
-export type RelationshipType = 'parent_of' | 'sibling_of' | 'married_to' | 'partner_of'
+export type RelationshipType = 'parent_of' | 'sibling_of' | 'married_to' | 'partner_of' | 'uncle_aunt_of' | 'cousin_of'
 
 export interface Person {
   id: string

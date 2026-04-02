@@ -6,7 +6,7 @@ import type { NodeProps } from '@xyflow/react'
 import type { Person } from '@/types'
 
 export const PersonNode = memo(function PersonNode({ data }: NodeProps) {
-  const person = data as Person & { onClick?: () => void }
+  const person = data as unknown as Person & { onClick?: () => void }
 
   return (
     <div

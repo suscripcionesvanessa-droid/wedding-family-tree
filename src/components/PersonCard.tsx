@@ -28,11 +28,8 @@ export function PersonCard({ person, relationshipSummary }: Props) {
         </div>
         <div className="p-2 text-center">
           <p className="font-semibold text-sm text-gray-900 truncate">
-            {person.nickname ?? person.name}
+            {person.nickname ?? person.name.split(' ')[0]}
           </p>
-          {person.nickname && (
-            <p className="text-xs text-gray-500 truncate">{person.name}</p>
-          )}
           {relationshipSummary && (
             <p className="text-xs text-gray-400 mt-0.5 truncate">{relationshipSummary}</p>
           )}
